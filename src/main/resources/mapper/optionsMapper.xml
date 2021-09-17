@@ -1,0 +1,99 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eh00.mapper.OptionsMapper">
+    <sql id="Base_Column_List">
+        option_id, option_site_title, option_site_description, option_meta_description, option_meta_keyword,
+    option_aboutsite_avatar, option_aboutsite_title, option_aboutsite_content, option_aboutsite_wechat,
+    option_aboutsite_qq, option_aboutsite_github, option_aboutsite_weibo, option_tongji,
+    option_status
+    </sql>
+
+    <sql id="tb">options</sql>
+
+    <select id="getOptionsById" resultType="Options">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            option_id = #{optionId}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM
+            <include refid="tb" />
+        WHERE
+            option_id = #{optionId}
+    </delete>
+
+    <insert id="insert">
+        INSERT INTO
+            <include refid="tb" />
+            (<include refid="Base_Column_List" />)
+        VALUES
+        (#{optionId}, #{optionSiteTitle},
+        #{optionSiteDescrpition},#{optionMetadescription}, #{optionMetaKeyword},
+        #{optionAboutsiteAvatar}, #{optionAboutsiteTitle},
+        #{optionAboutsiteContent}, #{optionAboutsiteWechat},
+        #{optionAboutsiteQq}, #{optionAboutsiteGithub},
+        #{optionAboutsiteWeibo}, #{optionTongji}, #{optionStatus})
+    </insert>
+
+    <update id="update">
+        UPDATE
+            <include refid="tb" />
+        <set>
+            <if test="optionSiteTitle != null">
+                optoin_site_title = #{optionSiteTitle},
+            </if>
+            <if test="optionSiteDescription != null">
+                optoin_site_description = #{optionSiteDescription},
+            </if>
+            <if test="optionMetaDescription != null">
+                option_meta_description = #{optionMetaDescription},
+            </if>
+            <if test="optionMetaKeyword != null">
+                option_meta_keyword = #{optionMetaKeyword,jdbcType=VARCHAR},
+            </if>
+            <if test="optionAboutsiteAvatar != null">
+                option_aboutsite_avatar = #{optionAboutsiteAvatar},
+            </if>
+            <if test="optionAboutsiteTitle != null">
+                option_aboutsite_title = #{optionAboutsiteTitle},
+            </if>
+            <if test="optionAboutsiteContent != null">
+                option_aboutsite_content = #{optionAboutsiteContent},
+            </if>
+            <if test="optionAboutsiteWechat != null">
+                option_aboutsite_wechat = #{optionAboutsiteWechat},
+            </if>
+            <if test="optionAboutsiteQq != null">
+                option_aboutsite_qq = #{optionAboutsiteQq},
+            </if>
+            <if test="optionAboutsiteGithub != null">option_aboutsite_github =
+                #{optionAboutsiteGithub,jdbcType=VARCHAR},
+            </if>
+            <if test="optionAboutsiteWeibo != null">
+                option_aboutsite_weibo = #{optionAboutsiteWeibo},
+            </if>
+            <if test="optionTongji != null">
+                option_tongji = #{optionTongji},
+            </if>
+            <if test="optionStatus != null">o
+                ption_status = #{optionStatus}
+            </if>
+        </set>
+        WHERE
+            option_id = #{optionId}
+    </update>
+
+    <select id="getOptions" resultType="Options">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        limit 1
+    </select>
+</mapper>

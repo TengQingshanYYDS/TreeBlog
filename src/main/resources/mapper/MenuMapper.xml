@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eh00.mapper.MenuMapper">
+    <sql id="Base_Column_List">
+        menu_id, menu_name, menu_url, menu_level, menu_icon, menu_order
+    </sql>
+
+    <sql id="tb">menu</sql>
+
+    <select id="getMenuById" resultType="Menu">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        <include refid="tb" />
+        WHERE menu_id = #{menuId}
+    </select>
+
+    <delete id="deleteById">
+        DELETE FROM <include refid="tb" />
+        WHERE menu_id = #{menuId}
+    </delete>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="menuId">
+        INSERT INTO <include refid="tb" />
+        <include refid="Base_Column_List" />
+        VALUES (#{menuId}, #{menuName}, #{menuUrl}, #{menuLevel}, #{menuIcon}, #menuOrder)
+    </insert>
+
+    <update id="update">
+        UPDATE <include refid="tb" />
+        <set>
+            <if test="menuName != null">menu_name = #{menuName},</if>
+            <if test="menuUrl != null">menu_url = #{menuUrl},</if>
+            <if test="menuLevel != null">menu_level = #{menuLevel},</if>
+            <if test="menuIcon != null">menu_icon = #{menuIcon},</if>
+            <if test="menuOrder != null">menu_order = #{menuOrder},</if>
+        </set>
+        WHERE menu_id = #{menuId}
+    </update>
+
+    <!--获得菜单列表-->
+    <select id="listMenu" resultType="Menu">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        ORDER BY menu_order DESC , menu_id ASC
+    </select>
+</mapper>

@@ -1,0 +1,53 @@
+body {
+    background: url(../img/loginBg.jpg);
+}
+
+@media screen and (max-height: 550px){
+    #login {
+        padding: 20px 0;
+    }
+}
+
+#login {
+    width: 320px;
+    padding: 8% 0 0;
+    margin: auto;
+}
+
+#login form{
+    background: rgba(255, 255, 255, 0.6);
+    border-radius: 2px;
+    border: 1px solid #fff;
+    padding: 26px 24px 46px;
+}
+
+#login label{
+    color: #000;
+    font-weight: bold;
+    font-size: 14px;
+}
+
+#login form input {
+    border: 1px solid #ddd;
+    font-size: 24px;
+    padding: 3px;
+}
+
+#login form .submit-btn{
+    float: right;
+    background: #0085ba;
+    border-color: #0073aa #006799 #006799;
+    color: #fff;
+    font-size: 15px;
+    padding: 0 12px 2px;
+}
+
+#login form .submit-btn:hover{
+    cursor: pointer;
+}
+
+#backto-blog a{
+    text-decoration: none;
+    color: #fff;
+    font-size: 13px;
+}

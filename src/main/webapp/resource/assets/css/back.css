@@ -1,0 +1,75 @@
+.postbox {
+    border: 1px solid #ddd;
+    padding: 0 12px 12px;
+}
+
+.activity-block {
+    margin: 0 -12px;
+    padding: 8px 12px 4px;
+}
+
+h2 h3 p {
+    margin: 1em 0;
+}
+
+li {
+    margin-bottom: 6px;
+}
+
+#published-posts ul span {
+    color: #72777c;
+}
+
+a {
+    color: #0073aa;
+}
+
+#latest-comments ul {
+    margin: 0 -12px;
+}
+
+#latest-comments ul li {
+    min-height: 60px;
+    margin: 0;
+    padding: 5px 12px;
+}
+
+#dashboard-quick-press form {
+    margin: 12px;
+}
+
+#activity-widget img {
+    width: 48px;
+    height: 48px;
+}
+
+
+/*页码start*/
+.pagination {
+    float: right;
+    margin-top: 10px;
+}
+
+.pagination a{
+    background: #fff;
+    margin-left: 5px;
+    padding: 8px 11px;
+    border: 1px solid #ddd;
+}
+
+.pagination .current {
+    background-color: #398898;
+    color: #ffffff;
+    border: 1px solid #398898;
+}
+
+a:hover {
+    color: #009688;
+}
+
+.pagination a:hover {
+    background: #009688;
+    color: #fff;
+    border: 1px solid #009688;
+}
+/*页码end*/

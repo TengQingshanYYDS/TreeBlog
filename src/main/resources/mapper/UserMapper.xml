@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eh00.mapper.UserMapper">
+    <sql id="tb">user</sql>
+
+    <sql id="Base_Column_List">
+        user_id, user_name, user_pass, user_nickname, user_email, user_url, user_avatar,
+        user_last_login_ip, user_register_time, user_last_login_time, user_status, user_role
+    </sql>
+
+    <select id="listUser" resultType="User">
+        SELECT
+           u <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        ORDER BY
+            user_status
+    </select>
+
+    <select id="getUserById" resultType="User">
+        SELECT
+        <include refid="Base_Column_List"></include>
+        FROM <include refid="tb"></include>
+        where user_id = #{userId}
+    </select>
+
+    <update id="update">
+        UPDATE
+            <include refid="tb" />
+        <set>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="userPass != null">user_pass = #{userPass},</if>
+            <if test="userNickname != null">user_nickname = #{userNickname},</if>
+            <if test="userEmail != null">user_email = #{userEmail},</if>
+            <if test="userUrl != null">user_url = #{userUrl},</if>
+            <if test="userAvatar != null">user_avatar = #{userAvatar},</if>
+            <if test="userLastLoginIp != null">user_last_login_ip = #{userLastLoginIp},</if>
+            <if test="userRegisterTime != null">user_register_time = #{userRegisterTime},</if>
+            <if test="userLastLoginTime != null">user_last_login_time = #{userLastLoginTime},</if>
+            <if test="userStatus != null">user_status = #{userStatus},</if>
+            <if test="userRole != null">user_role = #{userRole},</if>
+        </set>
+        WHERE
+            user_id = #{userId}
+    </update>
+    
+    <select id="getUserByNameOrEmail" resultType="User">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            user_name = #{value} OR user_email = #{value}
+        AND
+            user_status > 0
+        limit 1
+    </select>
+
+    <select id="getUserByName" resultType="User">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            user_name = #{value}
+        limit 1
+    </select>
+
+    <select id="getUserByEmail" resultType="User">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        <include refid="tb" />
+        WHERE
+        user_email = #{value}
+        limit 1
+    </select>
+
+</mapper>

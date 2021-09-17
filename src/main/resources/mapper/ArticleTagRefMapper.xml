@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eh00.mapper.ArticleTagRefMapper">
+    <sql id="tb">article_tag_ref</sql>
+
+    <insert id="insert">
+        INSERT INTO
+            <include refid="tb" />
+            (article_id, tag_id)
+        VALUES
+            (#{articleId}, ${tagId})
+    </insert>
+
+    <delete id="deleteByTagId">
+        DELETE FROM
+            <include refid="tb" />
+        WHERE
+            tag_id = #{tagId}
+    </delete>
+
+    <delete id="deleteByArticleId">
+        DELETE FROM
+        <include refid="tb" />
+        WHERE
+        article_id = #{articleId}
+    </delete>
+
+    <select id="countArticleByTagId" resultType="Integer">
+        SELECT
+            COUNT (*)
+        FROM
+            <include refid="tb" />
+        WHERE
+            article_id = #{articleId}
+    </select>
+
+    <select id="listTagByArticleId" resultType="Tag">
+        SELECT
+            tag.*
+        FROM
+            tag
+        JOIN
+            article_tag_ref
+        ON
+            article_tag_ref.tag_id = tag.tag_id
+        WHERE
+            article_tag_ref.article_id = #{value}
+    </select>
+</mapper>

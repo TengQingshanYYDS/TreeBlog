@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eh00.mapper.CategoryMapper">
+    <sql id="tb">category</sql>
+
+    <sql id="Base_Column_List">
+        category_id, category_pid, category_name, category_description, category_order, category_icon
+    </sql>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="categoryId">
+        INSERT INTO
+            <include refid="tb" />
+        <include refid="Base_Column_List" />
+        VALUES (
+            #{categoryPid}, #{categoryName}, #{categoryDescription}, #{categoryOrder}, #{categoryIcon}
+        )
+    </insert>
+
+    <update id="update">
+        UPDATE
+            <include refid="tb" />
+        <set>
+            <if test="categoryPid != null">category_pid = #{categoryPid},</if>
+            <if test="categoryName != null">category_name = #{categoryName},</if>
+            <if test="categoryDescription != null">category_description = #{categoryDescription},</if>
+            <if test="categoryOrder != null">category_order = #{categoryOrder},</if>
+            <if test="categoryIcon != null">category_icon = #{categoryIcon},</if>
+        </set>
+    </update>
+
+    <select id="getCategoryById" resultType="Category">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            category_id = #{categoryId}
+    </select>
+
+    <delete id="deleteCategory">
+        DELETE
+        FROM
+            <include refid="tb" />
+        WHERE
+            category_id = #{categoryId}
+    </delete>
+
+    <select id="countCategory" resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="tb" />
+    </select>
+
+    <select id="listCategory" resultType="Category">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        ORDER BY category_order desc, category_id asc
+    </select>
+
+    <select id="findChildCategory" resultType="Category">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            category_pid = #{categoryPid}
+    </select>
+
+    <select id="getCategoryByName" resultType="Category">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            category_name = #{categoryName}
+        limit 1
+    </select>
+</mapper>

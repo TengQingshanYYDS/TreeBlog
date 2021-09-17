@@ -1,0 +1,297 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.eh00.mapper.ArticleMapper">
+
+    <sql id="tb">article</sql>
+
+    <sql id="Base_Column_List">
+        article_id, article_user_id, article_title, article_content,article_summary, article_view_count, article_comment_count, article_like_count, article_create_time,
+    article_update_time, article_is_comment, article_status, article_order
+    </sql>
+
+    <!--获取文章总数-->
+    <select id="countArticle" resultType="Integer">
+        SELECT
+            COUNT(*)
+        FROM
+            <include refid="tb"/>
+        WHERE
+            article_status = 1
+    </select>
+
+    <!--获得文章留言总数-->
+    <select id="countArticleComment" resultType="Integer">
+        SELECT
+            SUM(article_comment_count)
+        FROM
+            <include refid="tb" />
+        WHERE article_status = 1
+    </select>
+
+    <!--统计文章总访问量-->
+    <select id="countArticleView" resultType="Integer">
+        SELECT
+        SUM(article_view_count)
+        FROM
+        <include refid="tb" />
+        WHERE article_status = 1
+    </select>
+
+    <!--获得所有文章-->
+    <select id="listArticle" resultType="Article">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            article_status = 1
+        ORDER BY
+            article_order DESC, article_id DESC
+    </select>
+
+    <select id="countArticleByUser" resultType="Integer">
+        SELECT
+        COUNT (*)
+        FROM
+        <include refid="tb" />
+        WHERE
+        article_user_id = #{id} and article_status = 1
+    </select>
+
+    <select id="listArticleByLimit" resultType="Article">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        <where>
+            <if test="userId != null">
+                user_id = #{userId}
+            </if>
+        </where>
+        ORDER BY
+            article_id DESC
+        limit
+            #{limit}
+    </select>
+
+    <update id="update">
+        UPDATE
+            <include refid="tb" />
+        <set>
+            <if test="articleUserId != null">article_user_id = #{articleUserId},</if>
+            <if test="articleTitle != null">article_title = #{articleTitle},</if>
+            <if test="articleViewCount != null">article_view_count = #{articleViewCount},</if>
+            <if test="articleCommentCount != null">article_comment_count = #{articleCommentCount},</if>
+            <if test="articleLikeCount != null">article_like_count = #{articleLikeCount},</if>
+            <if test="articleCreateTime != null">article_create_time = #{articleCreateTime},</if>
+            <if test="articleUpdateTime != null">article_update_time = #{articleUpdateTime},</if>
+            <if test="articleIsComment != null">article_is_comment = #{articleIsComment},</if>
+            <if test="articleStatus != null">article_status = #{articleStatus},</if>
+            <if test="articleOrder != null">article_order = #{articleOrder},</if>
+            <if test="articleContent != null">article_content = #{articleContent},</if>
+            <if test="articleSummary != null">article_summary = #{articleSummary},</if>
+        </set>
+        WHERE
+            article_id = #{articleId}
+    </update>
+
+    <delete id="deleteById">
+        DELETE FROM
+            <include refid="tb" />
+        WHERE
+            article_id = #{articleId}
+    </delete>
+
+    <select id="getArticleByStatusAndId" resultType="Article">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        <include refid="tb" />
+        <where>
+            <if test="status != null">
+                article_status = #{status}
+            </if>
+            <if test="id != null">
+                AND article_id = #{id}
+            </if>
+        </where>
+    </select>
+
+    <select id="listArticleByViewCount" resultType="Article">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            article_status = 1
+        ORDER BY
+            article_view_count DESC, article_order DESC, article_id DESC
+        limit #{limit}
+    </select>
+
+    <select id="getAfterArticle" resultType="Article">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            article_id > #{id} AND article_status = 1
+        ORDER BY article_id
+        limit 1
+    </select>
+
+    <select id="getPreArticle" resultType="Article">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        <include refid="tb" />
+        WHERE
+        article_Id &lt; #{id} AND article_status = 1
+        ORDER BY article_id DESC
+        limit 1
+    </select>
+
+    <select id="listRandomArticle" resultType="Article">
+        SELECT
+            <include refid="Base_Column_List" />
+        FROM
+            <include refid="tb" />
+        WHERE
+            article_status = 1
+        ORDER BY
+            RAND()
+        limit #{limit}
+    </select>
+
+    <select id="listArticleByCommentCount" resultType="Article">
+        SELECT
+        <include refid="Base_Column_List" />
+        FROM
+        <include refid="tb" />
+        WHERE
+        article_status = 1
+        ORDER BY
+        article_comment_count DESC,article_order DESC, article_id DESC
+        limit #{limit}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="articleId">
+        INSERT INTO
+        <include refid="tb"/>
+        (article_user_id, article_title,
+        article_view_count, article_comment_count,
+        article_like_count, article_create_time, article_update_time,
+        article_is_comment, article_status, article_order,
+        article_content, article_summary)
+        VALUES (
+        #{articleUserId}, #{articleTitle},
+        #{articleViewCount}, #{articleCommentCount},#{articleLikeCount}, #{articleCreateTime},
+        #{articleUpdateTime}, #{articleIsComment}, #{articleStatus}, #{articleOrder},
+        #{articleContent}, #{articleSummary}
+        )
+    </insert>
+
+    <update id="updateCommentCount">
+        UPDATE
+            <include refid="tb" />
+        SET
+            article_comment_count = (
+            SELECT COUNT (*) FROM comment
+            WHERE article.article_id=comment.comment_article_id
+        )
+        WHERE
+            article_id = #{articleId}
+    </update>
+
+    <select id="getLastUpdateArticle" resultType="Article">
+        SELECT
+        <include refid="Base_Column_List"/>
+        FROM
+        <include refid="tb"/>
+        WHERE
+        article_status = 1
+        AND article_update_time = (
+        SELECT max(article_update_time)
+        FROM <include refid="tb"/>
+        WHERE
+        article_status = 1
+        )
+    </select>
+
+    <select id="findArticleByCategoryIds" resultType="Article">
+        SELECT
+        article.article_id, article.article_user_id, article.article_title,
+        article.article_view_count, article.article_comment_count,
+        article.article_like_count, article.article_create_time, article.article_update_time,
+        article.article_is_comment, article.article_status, article.article_order,
+        article.article_summary
+        FROM
+            article, article_category_ref
+        <where>
+            article.article_status = 1
+            AND
+            article.article_id = article_category_ref.article_id
+            <if test="categoryIds != null">
+                AND article_category_ref.category_id IN
+                <foreach collection="categoryIds" open="(" close=")" separator="," item="id">
+                    #{id}
+                </foreach>
+            </if>
+        </where>
+        LIMIT #{limit}
+    </select>
+
+    <select id="listAllNotWithContent" resultType="Article">
+        SELECT
+        article_id, article_user_id, article_title, article_create_time
+        FROM
+        <include refid="tb"/>
+        WHERE article_status = 1
+        ORDER BY article_id DESC
+    </select>
+
+    <select id="findAll" resultType="Article">
+        SELECT
+        article.*
+        FROM
+        article
+        <where>
+            <if test="status != null">
+                article.article_status = #{status}
+            </if>
+            <if test="keywords != null">
+                AND article.article_title LIKE concat('%',#{keywords},'%')
+            </if>
+            <if test="userId != null">
+                AND article.article_user_id = #{userId}
+            </if>
+            <if test="categoryId != null">
+                AND article.article_id IN (
+                SELECT article_category_ref.article_id FROM article_category_ref
+                WHERE article_category_ref.category_id = #{categoryId}
+                )
+            </if>
+            <if test="tagId != null">
+                AND article.article_id IN (
+                SELECT article_tag_ref.article_id FROM article_tag_ref
+                WHERE article_tag_ref.tag_id = #{tagId}
+                )
+            </if>
+        </where>
+        ORDER BY `article`.`article_order` DESC, `article`.`article_id` DESC
+    </select>
+
+
+
+    <select id="listArticleIdsByUserId" resultType="Integer">
+        SELECT
+            article_id
+        FROM
+            <include refid="tb" />
+        WHERE
+            article_user_id = #{userId}
+    </select>
+
+</mapper>
